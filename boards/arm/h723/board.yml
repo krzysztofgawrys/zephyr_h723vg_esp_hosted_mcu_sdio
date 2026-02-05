@@ -1,0 +1,5 @@
+board:
+  name: h723
+  vendor: st
+  socs:
+    - name: stm32h723xx

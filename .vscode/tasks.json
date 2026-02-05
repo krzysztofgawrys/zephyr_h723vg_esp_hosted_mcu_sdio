@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "erase-flash",
+        "type": "shell",
+        "command": "JLinkExe",
+        "args": [
+          "-device", "STM32L4S9ZI",   // Replace with your MCU name
+          "-if", "SWD",
+          "-speed", "4000",
+          "-CommanderScript", "${workspaceFolder}/erase.jlink"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": []
+      }
+    ]
+  }

@@ -1,0 +1,165 @@
+/*
+ * Copyright (c) 2023 STMicroelectronics
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/dts-v1/;
+
+#include <st/h7/stm32h723Xg.dtsi>
+#include <st/h7/stm32h723vgtx-pinctrl.dtsi>
+#include <mem.h>
+
+/ {
+	model = "H723";
+	compatible = "st,h723";
+
+	chosen {
+		zephyr,flash = &flash0;
+		zephyr,sram = &sram0;
+		zephyr,console = &lpuart1;
+		zephyr,shell-uart = &lpuart1;
+        zephyr,cortex-m-idle-timer = &lptim1;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		led: led {
+			gpios = <&gpioe 3 GPIO_ACTIVE_HIGH>;
+			label = "User LD2";
+		};
+	};
+
+	aliases {
+		led = &led;
+	};
+};
+
+&rng {
+	status = "okay";
+};
+
+&clk_lsi {
+	status = "okay";
+};
+
+&clk_hse {
+	clock-frequency = <DT_FREQ_M(25)>;
+	status = "okay";
+};
+
+&pll {
+	div-m = <2>;
+	mul-n = <44>;
+	div-p = <1>;
+	div-q = <2>;
+	div-r = <2>;
+	clocks = <&clk_hse>;
+	status = "okay";
+};
+
+&rcc {
+	clocks = <&pll>;
+	clock-frequency = <550000000>;
+	d1cpre = <1>;
+	hpre = <2>;    /* HCLK: 275   MHz */
+	d1ppre = <2>;  /* APB1: 137.5 MHz */
+	d2ppre1 = <2>; /* APB2: 137.5 MHz */
+	d2ppre2 = <2>; /* APB3: 137.5 MHz */
+	d3ppre = <2>;  /* APB4: 137.5 MHz */
+};
+
+// zephyr_udc0: &usbotg_hs {
+//         pinctrl-0 = <&usb_otg_hs_dm_pa11 &usb_otg_hs_dp_pa12>;
+//         pinctrl-names = "default";
+//         status = "okay";
+
+//         cdc_acm_uart0: cdc_acm_uart0 {
+//             compatible = "zephyr,cdc-acm-uart";
+// 	        status = "okay";
+//         };
+// };
+
+// &otghs_fs_phy {
+// 	status = "okay";
+// };
+
+
+&lpuart1 {
+    pinctrl-0 = <&lpuart1_tx_pa9 &lpuart1_rx_pa10>;
+    pinctrl-names = "default";
+    current-speed = <115200>;
+    status = "okay";
+};
+
+// &dma2 {
+//     status = "okay";
+// };
+
+&pinctrl {
+    sdmmc1_d0_pc8: sdmmc1_d0_pc8 {
+        pinmux = <STM32_PINMUX('C', 8, AF12)>;
+        bias-pull-up;
+        drive-push-pull;
+		slew-rate = "very-high-speed";
+    };
+    sdmmc1_d1_pc9: sdmmc1_d1_pc9 {
+        pinmux = <STM32_PINMUX('C', 9, AF12)>;
+        bias-pull-up;
+        drive-push-pull;
+		slew-rate = "very-high-speed";
+    };
+    sdmmc1_d2_pc10: sdmmc1_d2_pc10 {
+        pinmux = <STM32_PINMUX('C', 10, AF12)>;
+        bias-pull-up;
+        drive-push-pull;
+		slew-rate = "very-high-speed";
+    };
+    sdmmc1_d3_pc11: sdmmc1_d3_pc11 {
+        pinmux = <STM32_PINMUX('C', 11, AF12)>;
+        bias-pull-up;
+        drive-push-pull;
+		slew-rate = "very-high-speed";
+    };
+    sdmmc1_cmd_pd2: sdmmc1_cmd_pd2 {
+        pinmux = <STM32_PINMUX('D', 2, AF12)>;
+        bias-pull-up;
+        drive-push-pull;
+		slew-rate = "very-high-speed";
+    };
+    sdmmc1_ck_pc12: sdmmc1_ck_pc12 {
+        pinmux = <STM32_PINMUX('C', 12, AF12)>;
+        drive-push-pull;
+		slew-rate = "very-high-speed";
+    };
+};
+
+&sdmmc1 {
+    status = "okay";
+    compatible = "st,stm32-sdio";
+    pinctrl-0 = <&sdmmc1_d0_pc8 &sdmmc1_d1_pc9 &sdmmc1_d2_pc10 &sdmmc1_d3_pc11 &sdmmc1_ck_pc12 &sdmmc1_cmd_pd2>;
+    pinctrl-names = "default";
+    bus-width = <4>;
+    interrupt-names = "event";
+	hw-flow-control;
+
+	max-bus-freq = <20000000>;
+    min-bus-freq = <400000>;
+
+	#address-cells = <1>;
+    #size-cells = <0>;
+
+	// dma-names = "rx", "tx";
+	// dmas = <&dma2 4 4 0x20400 0x0>, /* Parametry: phandle, channel, slot, config, features */
+    //        <&dma2 4 5 0x20400 0x0>;
+
+    esp_sdio: esp_sdio@0 {
+        compatible = "kg,esp-hosted-sdio";
+        reg = <0>;
+        status = "okay";
+    };
+};
+
+
+stm32_lp_tick_source: &lptim1 {
+        status = "okay";
+};

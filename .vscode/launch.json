@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flash & Debug",
+      "type": "cortex-debug",
+      "request": "launch",
+      "executable": "build/zephyr/zephyr.elf",
+      "cwd": "${workspaceFolder}",
+      // "runToEntryPoint": "main",
+      "servertype": "jlink",
+      "device": "STM32H723VG",
+      "showDevDebugOutput": "vscode",
+      "liveWatch": {
+        "enabled": false,
+        "samplesPerSecond": 4
+      },
+      // "openOCDLaunchCommands": [
+      //   "init",
+      //   "reset init"
+      // ],
+      // "configFiles": [
+      //   "openocd.cfg"
+      // ],
+      "overrideLaunchCommands": [],
+      "preLaunchCommands": [
+        "file build/zephyr/zephyr.elf",
+        "load"
+      ]
+      // "preLaunchTask": "erase-flash"
+      // "postRestartCommands": ["break main", "continue"]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+identifier: h723
+name: H723
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+  - gnuarmemb
+  - xtools
+ram: 564
+flash: 1024
+vendor: st
+supported:
+  - adc
+  - arduino_gpio
+  - arduino_i2c
+  - arduino_spi
+  - gpio
+  - i2c
+  - pwm
+  - rtc
+  - spi
+  - uart
+  - usb
+  - usb_device
